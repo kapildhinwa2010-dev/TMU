@@ -1,0 +1,50 @@
+name: Train & Compare (TMU vs baseline GPT-2)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "scripts/train_comparison.py"
+      - "configs/**"
+      - ".github/workflows/train.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies (CPU torch)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e .
+
+      - name: Run baseline vs TMU training comparison
+        run: |
+          python scripts/train_comparison.py \
+            --config configs/train_compare.json \
+            --results results/tmu_vs_baseline.json \
+            --readme README.md
+
+      - name: Commit results + README update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/ README.md || true
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore: update training comparison results (TMU vs baseline GPT-2) [skip ci]"
+          git push

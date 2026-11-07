@@ -7,7 +7,7 @@
 #   python scripts/run_loops_demo.py
 #
 # With real data:
-#   python scripts/run_loops_demo.py --data examples/data_loops_example.jsonl
+#   python scripts/run_loops_demo.py --data examples/data_loops_examples.jsonl
 
 from __future__ import annotations
 

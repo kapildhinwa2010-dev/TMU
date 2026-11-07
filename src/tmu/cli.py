@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import time
 from typing import Optional
 
@@ -84,6 +85,8 @@ def _load_advanced_data(args, tokenizer, num_layers: int):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="TMU-GPT-2 CLI")
+    parser.add_argument("--config", type=str, default=None, help="Load defaults from a JSON config file (CLI flags override)")
+    parser.add_argument("--version", action="version", version="tmu-gpt2 0.1.1")
 
     parser.add_argument("--mode", choices=["basic", "advanced"], default="advanced")
     parser.add_argument("--data", type=str, default=None)
@@ -109,6 +112,20 @@ def main() -> None:
     parser.add_argument("--device", type=str, default="auto")
 
     args = parser.parse_args()
+
+    # JSON config file support: apply values for args NOT explicitly passed on the CLI
+    if args.config:
+        with open(args.config, "r", encoding="utf-8") as f:
+            _cfg = json.load(f)
+        _explicit = set()
+        for _tok in sys.argv[1:]:
+            if _tok.startswith("--"):
+                _explicit.add(_tok.lstrip("-").replace("-", "_"))
+        for _k, _v in _cfg.items():
+            _a = _k.replace("-", "_")
+            if hasattr(args, _a) and _a not in _explicit and _a != "config":
+                setattr(args, _a, _v)
+        print(f"[cli] Loaded config: {args.config}")
 
     device = _pick_device(args.device)
     print("Device:", device)
