@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tmu-gpt2"
-version = "0.1.0"
+version = "0.1.1"
 description = "Time Management Unit plugin for GPT-2 with external world time and internal AI/GPU clock"
 readme = "README.md"
 requires-python = ">=3.9"

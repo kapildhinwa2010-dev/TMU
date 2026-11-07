@@ -1,3 +1,12 @@
+## [0.1.1] - 2026-11-07
+
+### Fixed
+- **Critical**: `src/tmu/genrate.py` → `src/tmu/generate.py` — `import tmu` was broken (ImportError) since `__init__.py` imports from `.generate`.
+- `src/tmu/looping_advans.py` → `src/tmu/looping_advanced.py` to match the public import name `tmu.looping_advanced` used by tests.
+
+### Changed
+- Repo made production-ready: root typo files renamed (`.gitignore`, `LICENSE`, `requirements.txt`, `.dockerignore`, `Dockerfile`, `Makefile`), docs/examples/scripts/tests typos fixed, 16 root research prototypes moved into `research/`, CI workflow moved to root `.github/workflows/ci.yml`, README cleaned (duplicate diagram removed, structure section added).
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

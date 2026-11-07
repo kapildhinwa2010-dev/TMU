@@ -221,3 +221,20 @@ Advanced Internal Adapter ──► GPT-2 Activations Modulation
               ▼                                       ▼
      Static KV-cache layer skip             Dynamic no-cache layer skip
      fast, safe                             true per-step adaptive
+
+## 📁 Repository Structure
+
+```text
+TMU/
+├── src/tmu/            # Main package (20 modules: clock, pacing, plugin, adapter, ...)
+├── tests/              # Pytest suite
+├── docs/               # Documentation
+├── examples/           # Example data (JSONL)
+├── scripts/            # Demo scripts
+├── research/           # Research prototypes & experiments (moved from repo root)
+├── .github/workflows/  # CI (pytest on push/PR)
+├── Dockerfile / Makefile / pyproject.toml
+└── README.md / CHANGELOG.md / LICENSE
+```
+
+> **Note**: `research/` contains earlier standalone prototypes (GPT-2 + TMU full/advanced scripts, internal-clock experiments). Kept for reference; not part of the installed package.
