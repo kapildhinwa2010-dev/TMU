@@ -1,5 +1,0 @@
-{"text": "Morning meeting started. Please summarize quickly.", "timestamp": "2026-01-01T09:30:00", "budget": 0.25, "latency_ms": 120, "tokens_used": 12, "desired_layers": 4, "desired_pace": 0.33, "quality": 0.82}
-{"text": "Explain in detail why transformer attention works.", "timestamp": "2026-01-01T14:10:00", "budget": 0.85, "latency_ms": 650, "tokens_used": 48, "desired_layers": 10, "desired_pace": 0.83, "quality": 0.94}
-{"text": "Night planning session for tomorrow.", "timestamp": 1767229200, "budget": 0.45, "latency_ms": 260, "tokens_used": 20, "desired_layers": 6, "desired_pace": 0.50, "quality": 0.88}
-{"text": "Give a very short answer only.", "timestamp": "2026-01-02T02:15:00", "budget": 0.15, "latency_ms": 80, "tokens_used": 6, "desired_layers": 2, "desired_pace": 0.18, "quality": 0.75}
-{"text": "Compare morning and night productivity in depth.", "timestamp": "2026-01-02T08:00:00", "budget": 0.90, "latency_ms": 720, "tokens_used": 55, "desired_layers": 11, "desired_pace": 0.91, "quality": 0.95}
