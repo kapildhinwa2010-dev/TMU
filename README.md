@@ -1,5 +1,10 @@
 # TMU-GPT-2: Time Management Unit for GPT-2
 
+[![CI](https://github.com/kapildhinwa2010-dev/TMU/actions/workflows/ci.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/TMU/actions/workflows/ci.yml)
+[![Train & Compare](https://github.com/kapildhinwa2010-dev/TMU/actions/workflows/train.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/TMU/actions/workflows/train.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
+
 TMU-GPT-2 ek experimental PyTorch/HuggingFace project hai jo GPT-2 model ke andar
 ek plugin layer jaisa **Time Management Unit (TMU)** lagata hai.
 

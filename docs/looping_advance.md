@@ -84,7 +84,7 @@ Additional signals:
 ## Run Demo
 
 ```bash
-python scripts/run_loops_advanced_demo.py \
+python scripts/run_loops_advance_demo.py \
   --epochs 1 \
   --batch-size 2 \
   --seq-len 32 \
@@ -95,15 +95,15 @@ python scripts/run_loops_advanced_demo.py \
 ## Run with Real Data
 
 ```bash
-python scripts/run_loops_advanced_demo.py \
-  --data examples/data_loops_advanced.jsonl \
+python scripts/run_loops_advance_demo.py \
+  --data examples/data_loops_advance.jsonl \
   --epochs 1
 ```
 
 ## Enable Prompt Detector
 
 ```bash
-python scripts/run_loops_advanced_demo.py \
+python scripts/run_loops_advance_demo.py \
   --prompt-detector \
   --epochs 1
 ```
@@ -111,7 +111,7 @@ python scripts/run_loops_advanced_demo.py \
 ## Enable Loop Rejection
 
 ```bash
-python scripts/run_loops_advanced_demo.py \
+python scripts/run_loops_advance_demo.py \
   --enable-rejection \
   --rejection-margin 0.02 \
   --epochs 1
@@ -120,7 +120,7 @@ python scripts/run_loops_advanced_demo.py \
 ## Enable Latency Feedback
 
 ```bash
-python scripts/run_loops_advanced_demo.py \
+python scripts/run_loops_advance_demo.py \
   --feedback \
   --feedback-epochs 1 \
   --epochs 1
@@ -131,7 +131,7 @@ python scripts/run_loops_advanced_demo.py \
 Dynamic no-cache looping is slower:
 
 ```bash
-python scripts/run_loops_advanced_demo.py \
+python scripts/run_loops_advance_demo.py \
   --per-layer-timing \
   --use-gpu-events \
   --max-gen-tokens 10 \
@@ -141,5 +141,5 @@ python scripts/run_loops_advanced_demo.py \
 ## Tests
 
 ```bash
-pytest tests/test_looping_advanced.py
+pytest tests/test_looping_advance.py
 ```
