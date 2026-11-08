@@ -12,3 +12,5 @@ recursive-include examples *
 recursive-include scripts *.sh
 recursive-include scripts *.py
 recursive-include tests *.pyrecursive-include configs *.json
+include CITATION.cff
+include CODE_OF_CONDUCT.md

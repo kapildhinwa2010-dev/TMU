@@ -15,6 +15,7 @@ COPY src ./src
 COPY examples ./examples
 COPY tests ./tests
 COPY docs ./docs
+COPY configs ./configs
 COPY scripts ./scripts
 
 RUN pip install --upgrade pip && pip install -e .

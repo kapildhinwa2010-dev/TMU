@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use TMU-GPT-2 in your research, please cite it."
+title: "TMU-GPT-2: Time Management Unit for GPT-2"
+type: software
+authors:
+  - given-names: Kapil
+    family-names: Dhinwa
+repository-code: "https://github.com/kapildhinwa2010-dev/TMU"
+abstract: "A plugin layer for GPT-2 that adds time-awareness: external world-time cyclic features plus internal AI/GPU compute-time signals, fused into embeddings that modulate activations and drive pacing (layer skipping, token budgets)."
+keywords:
+  - GPT-2
+  - PyTorch
+  - time-awareness
+  - transformers
+  - temporal
+license: MIT
