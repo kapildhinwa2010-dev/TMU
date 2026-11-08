@@ -1,10 +1,11 @@
 {
+  "base_model": "gpt2",
+  "time_budget_min": 30,
   "seq_len": 32,
-  "batch_size": 16,
-  "epochs": 3,
-  "samples": 600,
-  "lr_baseline": 0.0003,
+  "batch_size": 8,
+  "samples": 1200,
+  "lr_baseline": 0.0001,
   "lr_tmu": 0.001,
-  "eval_samples": 120,
-  "gen_tokens": 16
+  "eval_samples": 160,
+  "gen_tokens": 12
 }
