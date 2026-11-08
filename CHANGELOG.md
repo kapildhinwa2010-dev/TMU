@@ -1,3 +1,7 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 ## [0.2.0] - 2026-11-08
 
 ### Added
@@ -32,10 +36,6 @@
 
 ### Changed
 - Repo made production-ready: root typo files renamed (`.gitignore`, `LICENSE`, `requirements.txt`, `.dockerignore`, `Dockerfile`, `Makefile`), docs/examples/scripts/tests typos fixed, 16 root research prototypes moved into `research/`, CI workflow moved to root `.github/workflows/ci.yml`, README cleaned (duplicate diagram removed, structure section added).
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
 
 ## [0.1.0] - 2026-11-07
 
