@@ -1,0 +1,68 @@
+{
+  "num_samples": 32,
+  "baseline_loss": 6.4196717441082,
+  "baseline_perplexity": 613.8014526367188,
+  "transplant_loss": 5.188988082110882,
+  "transplant_perplexity": 179.2870635986328,
+  "loss_delta": -1.2306836619973183,
+  "time_shift_seconds": 43200.0,
+  "logit_shift_mad": 1.903746785596013,
+  "time_sensitive": true,
+  "tmu_trainable_params": 4736256,
+  "tmu_total_params": 4736256,
+  "coherence": {
+    "period_86400s": {
+      "mad": 1.7376496195793152,
+      "cos": 0.9995041787624359,
+      "agree": 0.9166666567325592
+    },
+    "period_604800s": {
+      "mad": 3.333611249923706,
+      "cos": 0.9979663789272308,
+      "agree": 0.7948718070983887
+    },
+    "period_31536000s": {
+      "mad": 4.634312629699707,
+      "cos": 0.9961081743240356,
+      "agree": 0.7532051205635071
+    },
+    "period_43200s": {
+      "mad": 5.39646577835083,
+      "cos": 0.9952355623245239,
+      "agree": 0.714743584394455
+    },
+    "daily_coherence_cos": 0.9995041787624359,
+    "half_day_sensitivity_1_minus_cos": 0.004764437675476074,
+    "weekly_coherence_cos": 0.9979663789272308,
+    "yearly_coherence_cos": 0.9961081743240356
+  },
+  "training": {
+    "epochs": 1,
+    "samples": 96,
+    "batch_size": 2,
+    "seq_len": 32,
+    "lr": 0.001,
+    "seconds": 47.34185171127319,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 7.966229101022084,
+        "lm": 6.367891579866409,
+        "rhythm": 0.4016941726828615,
+        "pace": 0.752382468432188,
+        "layer": 0.6618203359345595,
+        "token": 0.09217383380894972,
+        "over": 0.06086786634599169,
+        "delta_us": 966452.4631458333
+      }
+    ]
+  },
+  "config": {
+    "model": "gpt2",
+    "fusion_layers": 1,
+    "fusion_expansion": 2,
+    "hidden_dim": 768,
+    "num_layers": 12,
+    "device": "cpu"
+  }
+}

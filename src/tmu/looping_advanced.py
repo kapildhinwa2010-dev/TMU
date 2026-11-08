@@ -38,8 +38,9 @@ from .clock import (
     AdvancedInternalClock,
     advanced_snapshot_to_tensor,
 )
-from .core import TimeManagementUnit
+from .core import TimeManagementUnit, load_tmu_state_dict
 from .data import AdvancedTimestampedDataset, estimate_text_difficulty
+from .fusion import encode_fused_time_embed
 from .heads import AdvancedTmuCapabilityHeads
 from .looping import (
     AdvancedLoopHeads,
@@ -57,7 +58,6 @@ from .system import SystemMonitor
 from .time_features import TimeLike, cyclic_time_features
 from .traffic import RequestState, TrafficMonitor
 from .utils import clamp01, log_norm, prepare_budget_tensor, safe_div
-
 
 ADV_TRAFFIC_DIM = 36
 
@@ -1119,14 +1119,14 @@ def predict_advanced_loop_embed_v3(
     Returns:
         pace, layer_frac, token_frac, loop_frac, latency_pred, time_embed, rhythm_pred
     """
-    external_embed = plugin.tmu.encode_time(
+    time_embed = encode_fused_time_embed(
+        tmu=plugin.tmu,
         time_stamp=timestamp,
+        internal_features=internal_features,
+        adapter=adapter,
         batch_size=batch_size,
         device=device,
     )
-
-    internal_embed = adapter(internal_features.to(device=device, dtype=torch.float32))
-    time_embed = external_embed + internal_embed
 
     budget_t = prepare_budget_tensor(budget, batch_size, device)
 
@@ -2189,7 +2189,7 @@ def load_advanced_loop_v3(
 ):
     ckpt = torch.load(path, map_location=device)
 
-    plugin.tmu.load_state_dict(ckpt["tmu_state_dict"])
+    load_tmu_state_dict(plugin.tmu, ckpt["tmu_state_dict"])
     heads.load_state_dict(ckpt["heads_state_dict"])
     adapter.load_state_dict(ckpt["adapter_state_dict"])
     refiner.load_state_dict(ckpt["refiner_state_dict"])

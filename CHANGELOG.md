@@ -1,3 +1,29 @@
+## [0.2.0] - 2026-11-08
+
+### Added
+- **Additional fusion layer** (TMU Layer v2): `src/tmu/fusion.py` me `TemporalFusionLayer` aur `TemporalFusionStack`.
+  - Gated residual MLP over the TMU time embedding (`x + gate * delta`).
+  - Zero-init output projection → layer init pe exact identity, pretrained behaviour safe.
+  - External + internal embeddings ab combine hone ke baad fusion stack se guzarte hain
+    (`TimeManagementUnit.encode_time(..., extra_embed=...)`).
+  - CLI flags: `--fusion-layers`, `--fusion-expansion`, `--fusion-dropout`.
+- **Transplant / export support**: `src/tmu/transplant.py`.
+  - `export_tmu_layer()` / `load_tmu_layer()` — portable TMU layer file (config + state dict + metadata).
+  - `mount_tmu_on_gpt2()` — trained TMU layer ko plain GPT-2 par mount karta hai.
+  - `GPT2WithTMU` — base model + TMU wrapper with time-aware `generate()`.
+  - `evaluate_transplant()` — baseline vs transplant loss/perplexity + time-shift logit delta.
+- New scripts: `scripts/train_tmu_layer.py` (train + export + test) aur `scripts/test_transplant.py`
+  (exported layer ko GPT-2 par transplant karke test).
+- New docs: `docs/fusion_layer.md`, `docs/transplant.md`.
+- New tests: `tests/test_fusion.py`, `tests/test_transplant.py`.
+
+### Changed
+- `tmu.encode_time()` ab optional `extra_embed` support karta hai (advanced path me internal
+  clock embedding combine hoke fusion layer se guzarti hai).
+- `load_tmu_state_dict()` helper — purane checkpoints (fusion params ke bina) ab bhi load hote hain.
+- `pyproject.toml`: version `0.2.0`, ruff/black config, project URLs.
+- README: additional layer + transplant sections, architecture diagram update.
+
 ## [0.1.1] - 2026-11-07
 
 ### Fixed

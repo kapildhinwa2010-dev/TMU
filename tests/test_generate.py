@@ -7,8 +7,8 @@ from tmu import (
     AdvancedTmuCapabilityHeads,
     TMUPlugin,
 )
-from tmu.generate import predict_advanced_time_embed
 from tmu.clock import advanced_snapshot_to_tensor
+from tmu.generate import predict_advanced_time_embed
 from tmu.utils import ADV_INTERNAL_DIM
 
 

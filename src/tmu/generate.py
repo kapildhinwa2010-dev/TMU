@@ -9,14 +9,15 @@ import torch.nn.functional as F
 from .adapter import AdvancedInternalAdapter
 from .clock import AdvancedClockSnapshot, AdvancedInternalClock, advanced_snapshot_to_tensor
 from .data import estimate_text_difficulty
+from .fusion import encode_fused_time_embed
 from .heads import AdvancedTmuCapabilityHeads
 from .modeling import custom_gpt2_forward_advanced, prefix_layer_skip_context
 from .pacing import AdvancedPaceConfig, AdvancedPaceController
 from .plugin import TMUPlugin
 from .system import SystemMonitor
+from .time_features import TimeLike
 from .traffic import TrafficMonitor
 from .utils import clamp01, prepare_budget_tensor
-from .time_features import TimeLike
 
 
 def predict_advanced_time_embed(
@@ -29,14 +30,14 @@ def predict_advanced_time_embed(
     device: torch.device,
     internal_features: torch.Tensor,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    external_embed = plugin.tmu.encode_time(
+    time_embed = encode_fused_time_embed(
+        tmu=plugin.tmu,
         time_stamp=timestamp,
+        internal_features=internal_features,
+        adapter=adapter,
         batch_size=batch_size,
         device=device,
     )
-
-    internal_embed = adapter(internal_features.to(device=device, dtype=torch.float32))
-    time_embed = external_embed + internal_embed
 
     budget_t = prepare_budget_tensor(budget, batch_size, device)
 
@@ -223,7 +224,6 @@ def generate_advanced_dynamic(
 
     enc = tokenizer(prompt, return_tensors="pt").to(device)
     input_ids = enc["input_ids"]
-    attention_mask = enc.get("attention_mask", torch.ones_like(input_ids))
     prompt_len = int(input_ids.shape[1])
 
     difficulty = estimate_text_difficulty(prompt)

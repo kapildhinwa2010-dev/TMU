@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tmu-gpt2"
-version = "0.1.1"
+version = "0.2.0"
 description = "Time Management Unit plugin for GPT-2 with external world time and internal AI/GPU clock"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,6 +31,11 @@ dev = [
   "ruff>=0.3.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/kapildhinwa2010-dev/TMU"
+Repository = "https://github.com/kapildhinwa2010-dev/TMU"
+Issues = "https://github.com/kapildhinwa2010-dev/TMU/issues"
+
 [project.scripts]
 tmu = "tmu.cli:main"
 
@@ -39,3 +44,23 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py39"
+exclude = ["research", ".venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E741"]
+
+[tool.ruff.lint.per-file-ignores]
+# Re-export module: public names yahan se import hote hain.
+"src/tmu/looping_advanced.py" = ["F401"]
+# Scripts sys.path ko runtime me set karte hain (source layout support).
+"scripts/*.py" = ["E402"]
+
+[tool.black]
+line-length = 110
+target-version = ["py39"]

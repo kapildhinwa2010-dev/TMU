@@ -240,6 +240,9 @@ def markdown_section(res) -> str:
     lines.append("| Logit change on 12h shift | " + str(z["logit_change_12h"]) + " | " + str(b["logit_change_12h"]) + " | " + str(t["logit_change_12h"]) + " |")
     lines.append("| Training steps done | 0 | " + str(b["steps"]) + " | " + str(t["steps"]) + " |")
     lines.append("| Train minutes used | 0 | " + str(b["minutes"]) + " | " + str(t["minutes"]) + " |")
+    fusion_layers = res.get("config", {}).get("fusion_layers")
+    if fusion_layers is not None:
+        lines.append("| Additional fusion layers | - | - | " + str(fusion_layers) + " | TMU Layer v2 additional layer |")
     lines.append("| Trainable params | - | " + f"{s['trainable_params_baseline']:,}" + " | " + f"{s['trainable_params_tmu']:,}" + " |")
     lines.append("| Avg train step | - | " + str(round(b["train_step_ms"], 1)) + " ms | " + str(round(t["train_step_ms"], 1)) + " ms |")
     lines.append("")
@@ -299,6 +302,8 @@ def main() -> None:
     ap.add_argument("--lr-tmu", dest="lr_tmu", type=float, default=1e-3)
     ap.add_argument("--eval-samples", dest="eval_samples", type=int, default=160)
     ap.add_argument("--gen-tokens", dest="gen_tokens", type=int, default=12)
+    ap.add_argument("--fusion-layers", dest="fusion_layers", type=int, default=1,
+                    help="Additional fusion layers in the TMU layer (0 = ablation without the new layer)")
     ap.add_argument("--results", type=str, default="results/tmu_vs_baseline.json")
     ap.add_argument("--readme", type=str, default=None)
     ap.add_argument("--device", type=str, default="auto")
@@ -374,6 +379,7 @@ def main() -> None:
         dropout=0.0,
         use_ema=True,
         apply_mode="scale",
+        fusion_layers=args.fusion_layers,
     )
     tmu_params = freeze_base_and_enable_tmu(plugin)
     trainable_tmu = sum(p.numel() for p in plugin.tmu.parameters())

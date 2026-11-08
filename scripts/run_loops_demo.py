@@ -16,7 +16,6 @@ import json
 import pathlib
 import sys
 import time
-from typing import Optional
 
 import torch
 from torch.utils.data import DataLoader

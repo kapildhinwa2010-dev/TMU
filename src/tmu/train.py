@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Optional
 
 import torch
 import torch.nn.functional as F
@@ -8,11 +8,11 @@ from torch.utils.data import DataLoader
 
 from .adapter import AdvancedInternalAdapter
 from .clock import AdvancedInternalClock, advanced_snapshot_to_tensor
+from .fusion import encode_fused_time_embed
 from .heads import AdvancedTmuCapabilityHeads, TmuCapabilityHeads
 from .plugin import TMUPlugin, freeze_base_and_enable_tmu
 from .system import SystemMonitor
 from .traffic import TrafficMonitor
-from .utils import prepare_budget_tensor
 
 
 def train_gpt2_tmu(
@@ -241,14 +241,14 @@ def train_advanced_tmu(
 
             internal_features = advanced_snapshot_to_tensor(snapshot, B, device)
 
-            external_embed = plugin.tmu.encode_time(
+            time_embed = encode_fused_time_embed(
+                tmu=plugin.tmu,
                 time_stamp=t,
+                internal_features=internal_features,
+                adapter=adapter,
                 batch_size=B,
                 device=device,
             )
-
-            internal_embed = adapter(internal_features)
-            time_embed = external_embed + internal_embed
 
             outputs = plugin(
                 input_ids=input_ids,

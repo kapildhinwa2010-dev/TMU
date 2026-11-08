@@ -94,3 +94,31 @@ Advanced controller additionally dekhta hai:
 - per-layer timing use ho sakti hai
 - confidence early stop use ho sakta hai
 - slow hai, lekin research ke liye powerful hai
+
+## 6. Additional Fusion Layer (v2)
+
+TMU Layer v2 me time embedding ke upar ek additional residual layer hota hai:
+
+```text
+h     = LayerNorm(x)
+u     = GELU(W_in(h))
+delta = W_out(u)
+gate  = sigmoid(W_gate(u))
+
+y = x + dropout(delta * gate)
+```
+
+- `W_out` zero-init → init pe identity, pretrained checkpoints safe.
+- External (world time) aur internal (AI clock) embeddings pehle combine hote hain,
+  phir fusion stack unpe lagta hai.
+- Stack me `N` layers ho sakte hain (`fusion_layers=0` → poora off).
+
+Implementation: `src/tmu/fusion.py`.
+
+## 7. Transplant
+
+Trained TMU layer ko ek portable file me export kiya ja sakta hai
+(config + state dict + metadata) aur kisi bhi plain GPT-2 par mount kiya ja
+sakta hai — base model ke weights bilkul nahi badalte.
+
+Implementation: `src/tmu/transplant.py`.

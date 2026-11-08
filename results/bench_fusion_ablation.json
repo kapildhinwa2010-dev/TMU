@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "generated_at": "2026-11-08 01:16:51 UTC",
+    "device": "cpu"
+  },
+  "config": {
+    "fusion_layers_0": "results/bench_fusion0.json",
+    "fusion_layers_1": "results/bench_fusion1.json"
+  },
+  "fusion_0": {
+    "baseline": {
+      "eval_loss": 2.8371,
+      "eval_ppl": 17.07,
+      "logit_change_12h": 0.0,
+      "eval_loss_shifted_12h": 2.8371,
+      "train_step_ms": 1182.4636216578886
+    },
+    "tmu": {
+      "eval_loss": 2.8298,
+      "eval_ppl": 16.94,
+      "logit_change_12h": 0.015134,
+      "eval_loss_shifted_12h": 2.8389,
+      "train_step_ms": 924.8799075438743
+    },
+    "trainable_params_baseline": 7231360,
+    "trainable_params_tmu": 34944,
+    "gen_ms_full_layers": 17.910176125013777,
+    "gen_ms_skipped_layers": 15.498776374982981,
+    "layer_skip_speedup": 1.1555864599687435,
+    "skip_layers": 2,
+    "total_layers": 4
+  },
+  "fusion_1": {
+    "baseline": {
+      "eval_loss": 2.8371,
+      "eval_ppl": 17.07,
+      "logit_change_12h": 0.0,
+      "eval_loss_shifted_12h": 2.8371,
+      "train_step_ms": 1165.0406214736838
+    },
+    "tmu": {
+      "eval_loss": 2.8293,
+      "eval_ppl": 16.93,
+      "logit_change_12h": 0.015912,
+      "eval_loss_shifted_12h": 2.8359,
+      "train_step_ms": 936.2111879649402
+    },
+    "trainable_params_baseline": 7231360,
+    "trainable_params_tmu": 134016,
+    "gen_ms_full_layers": 23.428070249991606,
+    "gen_ms_skipped_layers": 18.06610962501054,
+    "layer_skip_speedup": 1.2967966394689658,
+    "skip_layers": 2,
+    "total_layers": 4
+  }
+}

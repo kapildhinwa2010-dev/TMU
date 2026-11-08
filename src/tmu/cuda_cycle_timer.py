@@ -4,7 +4,6 @@ from typing import Any, Callable, Tuple
 
 import torch
 
-
 _CUDA_SRC = r"""
 #include <torch/extension.h>
 #include <cuda_runtime.h>

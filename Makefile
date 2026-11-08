@@ -1,4 +1,4 @@
-.PHONY: install dev test lint demo advanced-demo dynamic-demo real-data-demo compare clean
+.PHONY: install dev test lint format demo advanced-demo dynamic-demo real-data-demo compare train-layer test-transplant clean
 
 install:
 	pip install -e .
@@ -26,6 +26,12 @@ real-data-demo:
 
 compare:
 	python scripts/train_comparison.py --results results/tmu_vs_baseline.json
+
+train-layer:
+	python scripts/train_tmu_layer.py --fusion-layers 1 --export artifacts/tmu_layer.pt
+
+test-transplant:
+	python scripts/test_transplant.py --layer artifacts/tmu_layer.pt --results results/transplant_test.json
 
 clean:
 	rm -rf build dist *.egg-info .pytest_cache __pycache__

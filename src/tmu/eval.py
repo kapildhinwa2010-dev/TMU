@@ -25,7 +25,11 @@ def _compare_logits(
         return {"mad": 0.0, "cos": 1.0, "agree": 1.0}
 
     mad = (a - b).abs().mean().item()
-    cos = F.cosine_similarity(a.unsqueeze(0), b.unsqueeze(0), dim=1).item()
+    cos = F.cosine_similarity(
+        a.reshape(1, -1),
+        b.reshape(1, -1),
+        dim=1,
+    ).item()
     agree = (a.argmax(-1) == b.argmax(-1)).float().mean().item()
 
     return {"mad": float(mad), "cos": float(cos), "agree": float(agree)}

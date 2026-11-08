@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 import time
-from typing import Optional
 
 import torch
 from torch.utils.data import DataLoader
@@ -13,6 +11,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .adapter import AdvancedInternalAdapter
 from .clock import AdvancedInternalClock
+from .core import load_tmu_state_dict
 from .data import (
     AdvancedTimestampedDataset,
     GPT2TimestampedDataset,
@@ -27,8 +26,8 @@ from .heads import AdvancedTmuCapabilityHeads, TmuCapabilityHeads
 from .pacing import AdvancedPaceConfig
 from .plugin import TMUPlugin
 from .system import SystemMonitor
-from .train import train_advanced_tmu, train_gpt2_tmu
 from .traffic import TrafficMonitor
+from .train import train_advanced_tmu, train_gpt2_tmu
 
 
 def _pick_device(device_arg: str) -> str:
@@ -102,6 +101,31 @@ def main() -> None:
     parser.add_argument("--budget-s", type=float, default=1.0)
     parser.add_argument("--eval-samples", type=int, default=2)
 
+    parser.add_argument(
+        "--fusion-layers",
+        type=int,
+        default=1,
+        help="TMU ke andar additional fusion layers ki sankhya (0 = fusion layer nahi)",
+    )
+    parser.add_argument(
+        "--fusion-expansion",
+        type=int,
+        default=2,
+        help="Fusion layer ki hidden expansion factor",
+    )
+    parser.add_argument(
+        "--fusion-dropout",
+        type=float,
+        default=0.0,
+        help="Fusion layer dropout",
+    )
+    parser.add_argument(
+        "--export-layer",
+        type=str,
+        default=None,
+        help="Trained TMU layer ko is path par export karo (portable transplant file)",
+    )
+
     parser.add_argument("--use-gpu-events", action="store_true")
     parser.add_argument("--per-layer-timing", action="store_true")
     parser.add_argument("--dynamic", action="store_true")
@@ -152,6 +176,9 @@ def main() -> None:
         dropout=0.0,
         use_ema=True,
         apply_mode="scale",
+        fusion_layers=args.fusion_layers,
+        fusion_expansion=args.fusion_expansion,
+        fusion_dropout=args.fusion_dropout,
     )
 
     if args.mode == "basic":
@@ -167,7 +194,7 @@ def main() -> None:
 
         if args.load:
             ckpt = torch.load(args.load, map_location=device)
-            plugin.tmu.load_state_dict(ckpt["tmu_state_dict"])
+            load_tmu_state_dict(plugin.tmu, ckpt["tmu_state_dict"])
             heads.load_state_dict(ckpt["heads_state_dict"])
         else:
             print("\n=== Training basic TMU ===")
@@ -186,6 +213,21 @@ def main() -> None:
                 "heads_state_dict": heads.state_dict(),
             }, args.save)
             print("Saved:", args.save)
+
+    if args.export_layer:
+        from .transplant import export_tmu_layer
+
+        export_tmu_layer(
+            plugin.tmu,
+            args.export_layer,
+            metadata={
+                "source": "tmu.cli",
+                "base_model": args.model,
+                "mode": args.mode,
+                "fusion_layers": args.fusion_layers,
+            },
+        )
+        print("Exported TMU layer:", args.export_layer)
 
         print("\n=== Time coherence evaluation ===")
         metrics = evaluate_time_coherence(
@@ -221,7 +263,7 @@ def main() -> None:
 
     if args.load:
         ckpt = torch.load(args.load, map_location=device)
-        plugin.tmu.load_state_dict(ckpt["tmu_state_dict"])
+        load_tmu_state_dict(plugin.tmu, ckpt["tmu_state_dict"])
         heads.load_state_dict(ckpt["heads_state_dict"])
         adapter.load_state_dict(ckpt["adapter_state_dict"])
     else:
@@ -255,6 +297,21 @@ def main() -> None:
             "adapter_state_dict": adapter.state_dict(),
         }, args.save)
         print("Saved:", args.save)
+
+    if args.export_layer:
+        from .transplant import export_tmu_layer
+
+        export_tmu_layer(
+            plugin.tmu,
+            args.export_layer,
+            metadata={
+                "source": "tmu.cli",
+                "base_model": args.model,
+                "mode": args.mode,
+                "fusion_layers": args.fusion_layers,
+            },
+        )
+        print("Exported TMU layer:", args.export_layer)
 
     pace_config = AdvancedPaceConfig(
         min_layers=2,

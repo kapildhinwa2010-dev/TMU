@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, List, Optional
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from .fusion import TemporalFusionStack
 from .time_features import TimeLike, cyclic_time_features
 
 
@@ -19,6 +20,9 @@ class TimeManagementUnit(nn.Module):
         dropout: float = 0.0,
         use_ema: bool = True,
         apply_mode: str = "scale",
+        fusion_layers: int = 1,
+        fusion_expansion: int = 2,
+        fusion_dropout: float = 0.0,
     ):
         super().__init__()
 
@@ -30,10 +34,14 @@ class TimeManagementUnit(nn.Module):
         self.dropout = float(dropout)
         self.use_ema = bool(use_ema)
         self.apply_mode = apply_mode
+        self.fusion_layers = max(0, int(fusion_layers))
+        self.fusion_expansion = max(1, int(fusion_expansion))
+        self.fusion_dropout = float(fusion_dropout)
 
         self.input_proj: Optional[nn.Linear] = None
         self.temporal_mlp: Optional[nn.Module] = None
         self.scale_proj: Optional[nn.Linear] = None
+        self.fusion: Optional[TemporalFusionStack] = None
 
         self.register_buffer("ema_time", torch.zeros(1, self.FEATURE_DIM), persistent=True)
 
@@ -65,6 +73,13 @@ class TimeManagementUnit(nn.Module):
         nn.init.zeros_(self.scale_proj.weight)
         nn.init.zeros_(self.scale_proj.bias)
 
+        self.fusion = TemporalFusionStack(
+            hidden_dim=hidden_dim,
+            num_layers=self.fusion_layers,
+            expansion=self.fusion_expansion,
+            dropout=self.fusion_dropout,
+        )
+
     def _match_batch(self, tensor: torch.Tensor, batch_size: int) -> torch.Tensor:
         if tensor.shape[0] == batch_size:
             return tensor
@@ -82,6 +97,7 @@ class TimeManagementUnit(nn.Module):
         time_stamp: TimeLike = None,
         batch_size: int = 1,
         device: Optional[torch.device] = None,
+        extra_embed: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
         if self.input_proj is None or self.temporal_mlp is None:
             raise RuntimeError("TMU build nahi hua. Pehle build(hidden_dim) call karein.")
@@ -110,6 +126,20 @@ class TimeManagementUnit(nn.Module):
 
         embed = self.input_proj(tf)
         embed = self.temporal_mlp(embed)
+
+        if extra_embed is not None:
+            extra = extra_embed.to(device=embed.device, dtype=embed.dtype)
+
+            if extra.dim() == 1:
+                extra = extra.unsqueeze(0)
+
+            if extra.shape[0] == 1 and embed.shape[0] > 1:
+                extra = extra.expand(embed.shape[0], -1)
+
+            embed = embed + extra
+
+        if self.fusion is not None and not self.fusion.is_identity:
+            embed = self.fusion(embed)
 
         return embed
 
@@ -169,3 +199,32 @@ class TimeManagementUnit(nn.Module):
 
         te = self.encode_time(time_stamp, batch_size=x.shape[0], device=x.device)
         return self.apply_to(x, te)
+
+def load_tmu_state_dict(
+    tmu: "TimeManagementUnit",
+    state_dict: Dict[str, torch.Tensor],
+    verbose: bool = True,
+) -> List[str]:
+    """Backward-compatible TMU state dict load.
+
+    Fusion layers naye parameters add karte hain, isliye purane checkpoints
+    (jinmein fusion weights nahi hote) load karte waqt missing keys aate hain.
+    Unhe silently ignore kiya jaata hai kyunki naye layers zero-init hain aur
+    identity behave karte hain.
+
+    Returns:
+        Missing keys jo checkpoint me nahi mile.
+    """
+
+    incompatible = tmu.load_state_dict(state_dict, strict=False)
+
+    missing = list(incompatible.missing_keys)
+    unexpected = list(incompatible.unexpected_keys)
+
+    if verbose and missing:
+        print(f"[tmu] checkpoint me missing keys (naye fusion params, identity init): {missing}")
+
+    if verbose and unexpected:
+        print(f"[tmu] checkpoint me unexpected keys (ignore kiye gaye): {unexpected}")
+
+    return missing

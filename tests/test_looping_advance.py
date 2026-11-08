@@ -1,7 +1,5 @@
 from types import SimpleNamespace
 
-import torch
-
 from tmu.looping_advanced import (
     ADV_TRAFFIC_DIM,
     AdvancedTrafficMonitor,

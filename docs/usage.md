@@ -135,3 +135,30 @@ python -m tmu.cli \
 ```bash
 pytest
 ```
+
+## 8. Additional Fusion Layer
+
+```bash
+python -m tmu.cli \
+  --mode advanced \
+  --fusion-layers 1 \
+  --fusion-expansion 2 \
+  --epochs 1
+```
+
+## 9. Train + Transplant TMU Layer
+
+```bash
+# train + export
+python scripts/train_tmu_layer.py \
+  --fusion-layers 1 \
+  --epochs 1 \
+  --samples 96 \
+  --export artifacts/tmu_layer.pt \
+  --results results/transplant_test.json
+
+# transplant onto plain GPT-2 and test
+python scripts/test_transplant.py \
+  --layer artifacts/tmu_layer.pt \
+  --results results/transplant_test.json
+```

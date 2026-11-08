@@ -4,8 +4,8 @@ import torch.nn.functional as F
 
 from tmu import (
     AdvancedPaceController,
-    TMUPlugin,
     TimeManagementUnit,
+    TMUPlugin,
     cyclic_time_features,
 )
 

@@ -1,4 +1,4 @@
-from tmu.data import parse_timestamp, estimate_text_difficulty
+from tmu.data import estimate_text_difficulty, parse_timestamp
 
 
 def test_parse_unix_timestamp():

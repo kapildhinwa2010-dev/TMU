@@ -22,7 +22,6 @@ import json
 import pathlib
 import sys
 import time
-from typing import Optional
 
 import torch
 from torch.utils.data import DataLoader
@@ -33,6 +32,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from tmu.clock import AdvancedInternalClock
 from tmu.data import (
     AdvancedTimestampedDataset,
     build_advanced_demo_records,
@@ -46,17 +46,13 @@ from tmu.looping_advanced import (
     AdvancedTrafficMonitor,
     AnchorScheduler,
     LatencyFeedbackBuffer,
-    LayerImportanceScorer,
     PromptDifficultyDetector,
     fine_tune_latency_feedback,
     generate_advanced_dynamic_loops_v3,
     load_advanced_loop_v3,
-    make_advanced_loop_plan,
     save_advanced_loop_v3,
     train_advanced_loop_v3,
 )
-from tmu.adapter import AdvancedInternalAdapter
-from tmu.clock import AdvancedInternalClock
 from tmu.pacing import AdvancedPaceConfig
 from tmu.plugin import TMUPlugin
 from tmu.system import SystemMonitor

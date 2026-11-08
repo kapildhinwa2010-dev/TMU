@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import torch
 import torch.nn as nn
@@ -41,6 +41,9 @@ class TMUPlugin(nn.Module):
         dropout: float = 0.0,
         use_ema: bool = True,
         apply_mode: str = "scale",
+        fusion_layers: int = 1,
+        fusion_expansion: int = 2,
+        fusion_dropout: float = 0.0,
     ):
         super().__init__()
 
@@ -58,6 +61,9 @@ class TMUPlugin(nn.Module):
             dropout=dropout,
             use_ema=use_ema,
             apply_mode=apply_mode,
+            fusion_layers=fusion_layers,
+            fusion_expansion=fusion_expansion,
+            fusion_dropout=fusion_dropout,
         )
 
         self.mode = mode
