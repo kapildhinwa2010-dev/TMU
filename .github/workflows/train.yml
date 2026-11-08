@@ -1,4 +1,4 @@
-name: Train & Compare (TMU vs baseline GPT-2)
+name: Train & Compare (GPT-2 vs GPT-2 + TMU)
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ permissions:
 jobs:
   train:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -e .
 
-      - name: Run baseline vs TMU training comparison
+      - name: Run equal-budget GPT-2 vs TMU training comparison
         run: |
           python scripts/train_comparison.py \
             --config configs/train_compare.json \
@@ -49,5 +49,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add results/ README.md || true
           git diff --staged --quiet && echo "No changes to commit" && exit 0
-          git commit -m "chore: update training comparison results (TMU vs baseline GPT-2) [skip ci]"
+          git commit -m "chore: update equal-budget benchmark results (GPT-2 vs GPT-2+TMU) [skip ci]"
           git push
