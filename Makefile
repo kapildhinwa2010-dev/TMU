@@ -13,16 +13,16 @@ lint:
 	ruff check src tests scripts
 
 demo:
-	./scripts/run_demo.sh
+	bash scripts/run_demo.sh
 
 advanced-demo:
-	./scripts/run_advanced_demo.sh
+	bash scripts/run_advanced_demo.sh
 
 dynamic-demo:
-	./scripts/run_dynamic_demo.sh
+	bash scripts/run_dynamic_demo.sh
 
 real-data-demo:
-	./scripts/run_real_data_demo.sh examples/data_examples.jsonl
+	bash scripts/run_real_data_demo.sh examples/data_examples.jsonl
 
 compare:
 	python scripts/train_comparison.py --results results/tmu_vs_baseline.json

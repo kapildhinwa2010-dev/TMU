@@ -9,6 +9,7 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from . import __version__
 from .adapter import AdvancedInternalAdapter
 from .clock import AdvancedInternalClock
 from .core import load_tmu_state_dict
@@ -85,7 +86,7 @@ def _load_advanced_data(args, tokenizer, num_layers: int):
 def main() -> None:
     parser = argparse.ArgumentParser(description="TMU-GPT-2 CLI")
     parser.add_argument("--config", type=str, default=None, help="Load defaults from a JSON config file (CLI flags override)")
-    parser.add_argument("--version", action="version", version="tmu-gpt2 0.1.1")
+    parser.add_argument("--version", action="version", version=f"tmu-gpt2 {__version__}")
 
     parser.add_argument("--mode", choices=["basic", "advanced"], default="advanced")
     parser.add_argument("--data", type=str, default=None)

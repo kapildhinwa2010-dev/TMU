@@ -9,5 +9,4 @@ python -m tmu.cli \
   --samples 64 \
   --dynamic \
   --per-layer-timing \
-  --use-gpu-events \
   --max-gen-tokens 12
