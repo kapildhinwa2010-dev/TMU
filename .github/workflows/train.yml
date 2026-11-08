@@ -50,4 +50,5 @@ jobs:
           git add results README.md
           git diff --staged --quiet && echo "No changes to commit" && exit 0
           git commit -m "chore: update equal-budget benchmark results (GPT-2 vs GPT-2+TMU) [skip ci]"
+          git pull --rebase origin main
           git push
