@@ -173,7 +173,9 @@ def train_model(model_or_plugin, loader, device, time_budget_s: float, max_epoch
             torch.nn.utils.clip_grad_norm_(params, 1.0)
             opt.step()
             step_ms.append((time.perf_counter() - t0) * 1000.0)
-            tot += float(loss.item()); n += 1; step += 1
+            tot += float(loss.item())
+            n += 1
+            step += 1
             if step % 20 == 0:
                 curve.append({"step": step, "epoch": ep, "loss": round(tot / max(1, n), 4)})
                 print(f"[{tag}] step {step} loss {tot/max(1,n):.4f} ({(time.perf_counter()-t_start)/60:.1f} min)")
@@ -194,7 +196,8 @@ def evaluate(model_or_plugin, loader, device, use_tmu: bool, time_shift_s: float
         for batch in loader:
             logits = forward(model_or_plugin, batch, device, time_shift_s, use_tmu)
             loss = lm_loss(logits, batch[0].to(device), batch[1].to(device))
-            tot += float(loss.item()); n += 1
+            tot += float(loss.item())
+            n += 1
             if use_tmu and time_shift_s == 0.0:
                 logits_shift = forward(model_or_plugin, batch, device, 43200.0, True)
                 logit_diffs.append(float((logits - logits_shift).abs().mean().item()))
