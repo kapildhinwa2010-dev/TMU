@@ -275,6 +275,12 @@ def generate_advanced_dynamic(
             per_layer_times=None,
             sync=bool(use_gpu_events),
         )
+        if traffic_monitor is not None and request_id is not None:
+            traffic_monitor.request_end(
+                request_id=request_id,
+                generated_tokens=0,
+                success=True,
+            )
         return "", {}, snapshot, {}
 
     while steps_done < int(max_new_tokens):

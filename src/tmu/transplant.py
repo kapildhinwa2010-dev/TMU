@@ -110,7 +110,12 @@ def load_tmu_layer(
 
 
 def load_tmu_layer_metadata(path: str) -> Dict[str, Any]:
-    """Export file ka metadata sirf padhta hai (weights load kiye bina)."""
+    """Read export metadata after deserializing the complete payload.
+
+    The payload includes weights and is loaded with pickle-backed ``torch.load``;
+    use this function only with trusted export files. Weights are not loaded into
+    a model, but they are still deserialized.
+    """
 
     payload = torch.load(path, map_location="cpu", weights_only=False)
     meta = dict(payload.get("metadata", {}))

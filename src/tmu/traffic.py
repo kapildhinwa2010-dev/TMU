@@ -91,6 +91,7 @@ class TrafficMonitor:
                 self.completed.popleft()
 
             active_count = len(self.active)
+            active_states = tuple(self.active.values())
             records = list(self.completed)
 
         latencies = sorted([r[1] for r in records]) if records else []
@@ -113,7 +114,7 @@ class TrafficMonitor:
 
         deadline_pressure = 0.0
 
-        for st in self.active.values():
+        for st in active_states:
             if st.deadline_s is None or st.deadline_s <= 1e-6:
                 continue
 
