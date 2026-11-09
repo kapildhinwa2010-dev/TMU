@@ -156,6 +156,20 @@ Supported timestamp formats:
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    A1["World timestamp"] --> B1["External time encoder: second/minute/hour/day/week cycles"]
+    A2["CPU/GPU clocks, latency, load, thermal"] --> B2["Internal AI-compute-time encoder"]
+    B1 --> C["Combined time embedding"]
+    B2 --> C
+    C --> D["TemporalFusionLayer: x + gate * W_out(GELU(W_in LN(x)))"]
+    D --> E["GPT-2 activation modulation"]
+    E --> F["Pace / rhythm / layer-fraction / token-fraction heads"]
+    F --> G["Static KV-cache layer skip (fast/safe)"]
+    F --> H["Dynamic no-cache layer skip (adaptive)"]
+```
+
+
 ```text
 Human/World Timestamp
         |
