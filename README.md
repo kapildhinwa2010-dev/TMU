@@ -238,8 +238,7 @@ from tmu import GPT2WithTMU, load_tmu_layer
 from transformers import AutoModelForCausalLM
 
 wrapped = GPT2WithTMU(
-    base_model=AutoModelForCausalLM.from_pretrained("gpt2
-"),
+    base_model=AutoModelForCausalLM.from_pretrained("gpt2"),
     tmu=load_tmu_layer("artifacts/tmu_layer.pt"),
 )
 

@@ -106,6 +106,10 @@ yani transplant technically toh hua, par time signal model tak nahi pohcha.
 
 ## 5. Caveats
 
+- `load_tmu_layer` aur `load_tmu_layer_metadata` dono complete `.pt` payload ko
+  pickle-backed `torch.load` se deserialize karte hain (`weights_only=False`).
+  Sirf trusted source se aaye export files load karein; metadata helper weights
+  ko model me install nahi karta, lekin payload ke weights ko deserialize karta hai.
 - Layer ka `hidden_dim` aur base model ka `hidden_dim` match hona chahiye
   (GPT-2 = 768, GPT-2-medium = 1024, GPT-2-large = 1280).
 - Base model ke pretrained weights transplant se affect nahi hote — sirf TMU
